@@ -1,0 +1,149 @@
+<script>
+
+  angular.module('mapprrAssignment').controller('ProductEditCtrl',['$scope' ,'$http' ,function ($scope, $http) {
+
+    $scope.errors = [];
+
+    $scope.saved = false;
+
+    function convertListToString(){
+      $scope.product.categories = $scope.product.category_list.join(",");
+      $scope.product.tags = $scope.product.tag_list.join(",");
+    }
+
+    function convertStringToList(){
+
+      if(angular.isDefined($scope.product.categories) && $scope.product.categories!= null ){
+        $scope.product.category_list = $scope.product.categories.split(",").map(function(item) {
+          return item.trim();
+        });
+      }else{
+        $scope.product.category_list = [];
+      }
+
+      if(angular.isDefined($scope.product.tags) && $scope.product.tags!= null ){
+        $scope.product.tag_list = $scope.product.tags.split(",").map(function(item) {
+          return item.trim();
+        });
+      }else{
+        $scope.product.tag_list = [];
+      }
+    }
+
+
+    $http({
+      method: 'GET',
+      url: '/admin/products/<%= @product.id  %>.json'
+    }).then(function successCallback(response) {
+      $scope.product = response.data.product;
+      convertListToString();
+    }, function errorCallback(response) {
+
+    });
+
+    $scope.submit = function (form) {
+      if(form.$invalid){
+        return;
+      }
+
+      convertStringToList();
+      $scope.errors = [];
+      $scope.saved = false;
+
+      $http.put('/admin/products/<%= @product.id  %>' ,$scope.product).then(function(response) {
+        $scope.saved = true;
+          $scope.product = response.data.product;
+          convertListToString();
+        },function(badResponse) {
+          $scope.saved = false;
+          $scope.errors = badResponse.data.errors;
+          // handle error response
+        });
+    };
+
+  }]);
+</script>
+<div class="container" ng-controller="ProductEditCtrl">
+  <h3> Edit Product </h3>
+  <!-- {{product}} -->
+  <form name="form" class="well form-horizontal" novalidate >
+
+
+      <div class="alert alert-danger alert-dismissible" role="alert" ng-show="errors.length">
+          <button type="button" class="close" id="btnHideErrors" ng-click="errors = []" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <ul class="list-unstyled">
+              <li ng-repeat="error in errors" >
+                  {{error}}
+              </li>
+          </ul>
+      </div>
+
+      <div class="alert alert-success alert-dismissible" role="alert" ng-show="saved">
+          <button type="button" class="close" id="btnHideErrors" ng-click="saved = false" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          Product updated successfully !!!
+      </div>
+
+      <!-- Text input-->
+      <div class="form-group">
+        <label class="col-md-3 control-label">Name</label>
+        <div class="col-md-9">
+
+          <input  class="form-control" type="text" ng-model="product.name" name="name" required=""  >
+          <div ng-show="form.$submitted || form.name.$touched">
+            <span class="text-danger" ng-show="form.name.$error.required">Name is required</span>
+          </div>
+        </div>
+      </div>
+      <!-- Text input-->
+
+      <!-- Text input-->
+      <div class="form-group">
+        <label class="col-md-3 control-label">SKU_ID</label>
+        <div class="col-md-9">
+
+          <input  class="form-control" type="text" ng-model="product.sku_id" name="sku_id" required=""  >
+          <div ng-show="form.$submitted || form.sku_id.$touched">
+            <span class="text-danger" ng-show="form.sku_id.$error.required">SKU_ID is required</span>
+          </div>
+        </div>
+      </div>
+      <!-- Text input-->
+
+      <!-- Text input-->
+      <div class="form-group">
+        <label class="col-md-3 control-label">Price</label>
+        <div class="col-md-9">
+
+          <input  class="form-control" type="text" ng-model="product.price" name="price" required=""  >
+          <div ng-show="form.$submitted || form.price.$touched">
+            <span class="text-danger" ng-show="form.price.$error.required">Price is required</span>
+          </div>
+        </div>
+      </div>
+      <!-- Text input-->
+
+
+      <!-- Text input-->
+      <div class="form-group">
+        <label class="col-md-3 control-label">Categories (Comma Separated)</label>
+        <div class="col-md-9">
+
+          <input  class="form-control" type="text" ng-model="product.categories" name="categories" required=""  >
+        </div>
+      </div>
+      <!-- Text input-->
+
+      <!-- Text input-->
+      <div class="form-group">
+        <label class="col-md-3 control-label">Tags (Comma Separated)</label>
+        <div class="col-md-9">
+
+          <input  class="form-control" type="text" ng-model="product.tags" name="tags" required=""  >
+        </div>
+      </div>
+      <!-- Text input-->
+
+      <button class="btn btn-primary" type="submit" ng-click="submit(form)">Save</button>
+
+  </form>
+</div>

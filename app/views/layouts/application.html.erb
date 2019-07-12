@@ -6,12 +6,27 @@
     <%= csp_meta_tag %>
 
     <%= stylesheet_link_tag    'application', media: 'all' %>
+    <%= javascript_include_tag 'application' %>
+    <script>
+      angular.module('mapprrAssignment', [
+            'ngResource'
+        ]);
 
+      angular.module('mapprrAssignment').config(["$httpProvider", function($httpProvider){
+        $httpProvider.defaults.headers.common['X-CSRF-Token'] = $('meta[name=csrf-token]').attr('content');
+      }]);
+
+      angular.module('mapprrAssignment')
+          .controller('RootController',['$scope',function($scope){
+
+          }]);
+    </script>
   </head>
 
   <body ng-controller="RootController">
     <%= yield %>
   </body>
 
-  <%= javascript_include_tag 'application' %>
+
+
 </html>

@@ -1,0 +1,38 @@
+<style>
+img{
+  width: 100px
+}
+</style>
+
+<div class="container">
+  <h3> Product Listing </h3>
+  <table class="table table-bordered">
+    <thead>
+      <th>Name</th>
+      <th >SKU_ID</th>
+      <th >Price</th>
+      <th >Thumbnail</th>
+    </thead>
+    <tbody>
+      <% @products.each do |product| %>
+        <tr >
+          <td>
+            <a href="products/<%= product.id  %>/edit" target="_blank" style="text-decoration: none" > <%= product.name  %> </a>
+          </td>
+          <td>
+            <%= product.sku_id  %>
+          </td>
+          <td>
+            <%= product.price  %>
+          </td>
+          <td>
+            <% if (product.images.size>0) %>
+              <img  src="<%= product.images[0]["img_path"] %>" />
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+
+    </tbody>
+  </table>
+</div>
