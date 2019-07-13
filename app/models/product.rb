@@ -10,7 +10,12 @@ class Product < ApplicationRecord
 
   validates :price, numericality: { greater_than: 0  }
 
+  validates :sku_id, allow_blank: true, numericality: { greater_than: 0 }
+
   validates :sku_id, allow_blank: true, uniqueness: true
+
+  # ASSUMPTIONS
+  # Expire date validations are missing
 
   serialize :images, Array
 

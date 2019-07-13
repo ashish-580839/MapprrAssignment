@@ -122,6 +122,19 @@
       </div>
       <!-- Text input-->
 
+      <!-- Text input-->
+      <div class="form-group">
+        <label class="col-md-3 control-label">Expire Date</label>
+        <div class="col-md-9">
+
+          <input  class="form-control" type="text" ng-model="product.expire_date" name="expire_date" required=""  >
+          <div ng-show="form.$submitted || form.expire_date.$touched">
+            <span class="text-danger" ng-show="form.expire_date.$error.required">Expire Date is required</span>
+          </div>
+        </div>
+      </div>
+      <!-- Text input-->
+
 
       <!-- Text input-->
       <div class="form-group">
